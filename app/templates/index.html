@@ -1,0 +1,201 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Record</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="{% static 'app/css/select2.css' %}" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.11.0/sweetalert2.min.js"></script>
+    <style>
+        body{
+            overflow: hidden;
+        }
+        .bg-gradient-to-br {
+            background: linear-gradient(to bottom right, #3b82f6, #10b981);
+        }
+        .hidden {
+            display: none;
+        }
+        .image-container {
+            width: 200px;
+            height: 200px;
+        }
+        .select2-container .select2-selection--single {
+            height: 2.5rem; /* Adjust height as needed */
+            border-radius: 0.375rem; /* Match Tailwind CSS border-radius */
+            border-color: #e5e7eb; /* Match Tailwind CSS border-color */
+        }
+        .select2-container .select2-selection--single .select2-selection__rendered {
+            line-height: 2.5rem; /* Match height for vertically centering text */
+        }
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 2.5rem; /* Match height for vertically centering arrow */
+        }
+
+        #course-filter + .select2-container--default .select2-selection--single,
+        #college-filter + .select2-container--default .select2-selection--single,
+        #year-filter + .select2-container--default .select2-selection--single {
+            width: 15vw;
+        }
+
+
+
+    </style>
+</head>
+<body class="bg-gray-100 p-6 h-screen">
+    <div class="container mx-auto h-full flex flex-col">
+        <h1 class="text-4xl font-bold text-center mb-8 text-white bg-gradient-to-br py-4 rounded-md shadow-lg">Student Record</h1>
+        <nav class="flex justify-center space-x-6 bg-white shadow-md py-3 px-6 rounded-md mb-8">
+            <a href="#add" id="menu-add" class="text-blue-600 hover:text-green-600 font-semibold transition-colors duration-300 border-b-4 border-transparent text-green-600 border-green-600">Add Student</a>
+            <a href="#view" id="menu-view" class="text-blue-600 hover:text-green-600 font-semibold transition-colors duration-300 border-b-4 border-transparent">View Students</a>
+        </nav>
+
+        <section id="add-student" class="flex-grow bg-white shadow-md p-6 rounded-md overflow-y-auto">
+            <h2 class="text-2xl font-bold mb-4 text-blue-600">Add Student</h2>
+            <form id="add-student-form">
+                <label class="block mb-2 text-gray-700">Profile Picture</label>
+                <input type="file" id="image-upload" class="w-full px-3 py-2 mb-4 border rounded-md">
+                
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div class="image-container overflow-hidden rounded-md">
+                        <img id="image-preview" class="object-contain w-full h-full" src="#" alt="Image Preview">
+                    </div>
+                </div>
+        
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block mb-2 text-gray-700">First Name</label>
+                        <input id='add-firstname' type="text" class="w-full px-3 py-2 mb-4 border rounded-md" placeholder="First Name">
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-gray-700">Last Name</label>
+                        <input id='add-lastname' type="text" class="w-full px-3 py-2 mb-4 border rounded-md" placeholder="Last Name">
+                    </div>
+                </div>
+                
+                <label class="block mb-2 text-gray-700">Date of Birth</label>
+                <input id='add-birthdate' type="date" class="w-full px-3 py-2 mb-4 border rounded-md">
+                
+                <label class="block mb-2 text-gray-700">Email</label>
+                <input id='add-email' type="email" class="w-full px-3 py-2 mb-4 border rounded-md" placeholder="Email">
+                
+                <label class="block mb-2 text-gray-700">Mobile Number</label>
+                <input id='add-number' type="tel" class="w-full px-3 py-2 mb-4 border rounded-md" placeholder="Mobile Number">
+                
+                <label class="block mb-2 text-gray-700">Address</label>
+                <textarea id='add-address' class="w-full px-3 py-2 mb-4 border rounded-md" placeholder="Address"></textarea>
+                
+                <label class="block mb-2 text-gray-700">College</label>
+                <select id="college-select" class="w-full px-3 py-2 mb-4 border rounded-md">
+                    <option value="" disabled selected>Select College</option>
+                    <option value="CA">College of Agriculture (CA)</option>
+                    <option value="CAS">College of Arts and Sciences (CAS)</option>
+                    <option value="CBM">College of Business and Management (CBM)</option>
+                    <option value="COE">College of Engineering (COE)</option>
+                    <option value="CFOS">College of Fisheries and Ocean Sciences (CFOS)</option>
+                    <option value="CIT">College of Industrial Technology (CIT)</option>
+                    <option value="CTE">College of Teacher Education (CTE)</option>
+                    <option value="CN">College of Nursing (CN)</option>
+                    <option value="CCJE">College of Criminal Justice Education (CCJE)</option>
+                    <option value="CVM">College of Veterinary Medicine (CVM)</option>
+                    <option value="CCICT">College of Computer, Information, and Communications Technology (CCICT)</option>
+                </select>
+                
+                <label class="block mb-2 mt-4 text-gray-700">Course</label>
+                <select id="course-select" class="w-full px-3 py-2 mb-4 border rounded-md">
+                    <option value="" disabled selected>Select Course</option>
+                </select>
+
+                <label class="block mb-2 mt-4 text-gray-700">Year</label>
+                <select class="w-full px-3 py-2 mb-4 border rounded-md" id='add-year'>
+                    <option value="" disabled selected>Select Year Level</option>
+                    <option value="1">First Year</option>
+                    <option value="2">Second Year</option>
+                    <option value="3">Third Year</option>
+                    <option value="4">Fourth Year</option>
+                    <option value="5">Fifth Year</option>
+                </select>
+        
+                <button id="add-student-button" type="submit" style="background-color: #009778;" class="text-white px-4 py-2 rounded-md mt-6">Add Student</button>
+            </form>
+        </section>
+        
+
+        <section id="view-students" class="flex-grow bg-white shadow-md p-6 rounded-md overflow-y-auto hidden">
+            <h2 class="text-2xl font-bold mb-4 text-blue-600">View Students</h2>
+            <div class="mb-4 flex items-center">
+                <label for="search-input" class="mr-2 font-bold">Search:</label>
+                <input type="text" id="search-input" class="px-2 py-2 border rounded-md w-64" placeholder="Search by ID...">
+            </div>
+        
+            <div class="mb-4 flex justify-between items-center">
+                <label for="college-filter" class="mr-1 font-bold">Filter:</label>
+                <select class="mr-2 py-2 border rounded-md" id="college-filter">
+                    <option value="" disabled selected>Select College</option>
+                    <option value="all">All</option>
+                    <option value="CA">College of Agriculture</option>
+                    <option value="CAS">College of Arts and Sciences</option>
+                    <option value="CBM">College of Business and Management</option>
+                    <option value="COE">College of Engineering</option>
+                    <option value="CFOS">College of Fisheries and Ocean Sciences</option>
+                    <option value="CIT">College of Industrial Technology</option>
+                    <option value="CTE">College of Teacher Education</option>
+                    <option value="CN">College of Nursing</option>
+                    <option value="CCJE">College of Criminal Justice Education</option>
+                    <option value="CVM">College of Veterinary Medicine</option>
+                    <option value="CCICT">College of Computer, Information and Communication Technology</option>
+                </select>
+                <select class="mx-2 py-2 border rounded-md" id="course-filter">
+                    <option value="" disabled selected>Select Course</option>
+                    <option value="all">All</option>
+                </select>
+                <select class="ml-2 py-2 border rounded-md" id="year-filter">
+                    <option value="" disabled selected>Select Year Level</option>
+                    <option value="all">All</option>
+                    <option value="1">First Year</option>
+                    <option value="2">Second Year</option>
+                    <option value="3">Third Year</option>
+                    <option value="4">Fourth Year</option>
+                    <option value="5">Fifth Year</option>
+                </select>
+            </div>
+            
+            <table class="w-full border-collapse border border-gray-200">
+                <thead style="background-color: #009778;">
+                    <tr>
+                        <th class="px-4 py-2 border border-gray-200 w-1/7 text-center text-white">ID</th>
+                        <th class="px-4 py-2 border border-gray-200 w-1/7 text-center text-white">Name</th>
+                        <th class="px-4 py-2 border border-gray-200 w-1/7 text-center text-white">College</th>
+                        <th class="px-4 py-2 border border-gray-200 w-1/7 text-center text-white">Course</th>
+                        <th class="px-4 py-2 border border-gray-200 w-1/7 text-center text-white">Year</th>
+                        <th class="px-4 py-2 border border-gray-200 w-1/7 text-center text-white">Email</th>
+                        <th class="px-4 py-2 border border-gray-200 w-1/6 text-center text-white">Enrollment Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                        <tr>
+                            <td class="px-4 py-2 border border-gray-200 text-center">{{ student.student_id }}</td>
+                            <td class="px-4 py-2 border border-gray-200 text-center">{{ student.first_name }} {{ student.last_name }}</td>
+                            <td class="px-4 py-2 border border-gray-200 text-center">{{ student.college }}</td>
+                            <td class="px-4 py-2 border border-gray-200 text-center">{{ student.course }}</td>
+                            <td class="px-4 py-2 border border-gray-200 text-center">{{ student.year }}</td>
+                            <td class="px-4 py-2 border border-gray-200 text-center">{{ student.email }}</td>
+                            <td class="px-4 py-2 border border-gray-200 text-center">{{ student.enrollment_date }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <button id='goUP' class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded fixed bottom-4 right-4">
+                Go Up
+            </button>
+        </section> 
+    </div>
+    <script src="{% static 'app/js/jquery.js' %}"></script>
+    <script src="{% static 'app/js/select2.js' %}"></script>
+    <script src="{% static 'app/js/design_function.js' %}"></script>
+    <script src="{% static 'app/js/manage_student.js' %}"></script>
+</body>
+</html>
