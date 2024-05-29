@@ -21,7 +21,6 @@ $('#add-student-button').click(function(){
         contentType: false,
         success: function(response) {
             if (response.success){
-                alert('Student Successfully Added')
                 $('#add-student-form')[0].reset();
                 $('#image-preview').attr('src', '#').addClass('hidden');
                 $('#college-select').val('');
