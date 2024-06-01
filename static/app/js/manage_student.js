@@ -36,6 +36,9 @@ $('#add-student-button').click(function(){
                         '<td class="px-4 py-2 border border-gray-200 text-center">' + student[0].fields.year + '</td>' +
                         '<td class="px-4 py-2 border border-gray-200 text-center">' + student[0].fields.email + '</td>' +
                         '<td class="px-4 py-2 border border-gray-200 text-center">' + formatDate1(student[0].fields.enrollment_date) + '</td>' +
+                        `<td class="px-4 py-2 border border-gray-200 text-center">
+                            <button id="view-student-button" type="button" class="text-white px-4 py-2 rounded-md bg-blue-600" value=${student[0].pk}>View</button>
+                        </td>` +
                     '</tr>';
                 
                 $('tbody').append(newRow);

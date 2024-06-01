@@ -172,6 +172,7 @@
                         <th class="px-4 py-2 border border-gray-200 w-1/7 text-center text-white">Year</th>
                         <th class="px-4 py-2 border border-gray-200 w-1/7 text-center text-white">Email</th>
                         <th class="px-4 py-2 border border-gray-200 w-1/6 text-center text-white">Enrollment Date</th>
+                        <th class="px-4 py-2 border border-gray-200 w-1/6 text-center text-white">Controls</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -184,6 +185,9 @@
                             <td class="px-4 py-2 border border-gray-200 text-center">{{ student.year }}</td>
                             <td class="px-4 py-2 border border-gray-200 text-center">{{ student.email }}</td>
                             <td class="px-4 py-2 border border-gray-200 text-center">{{ student.enrollment_date }}</td>
+                            <td class="px-4 py-2 border border-gray-200 text-center">
+                                <button id="view-student-button" type="button" class="text-white px-4 py-2 rounded-md bg-blue-600" value={{student.student_id}}>View</button>
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>
