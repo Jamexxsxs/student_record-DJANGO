@@ -68,3 +68,104 @@ function formatDate1(dateString){
 
     return date.toLocaleDateString('en-US', options)
 }
+
+$("#searchButton").click(function() {
+    var student_id = $('#search-input').val();
+
+    var formData = new FormData();
+    formData.append('student_id', student_id);
+
+    $.ajax({
+        url: '/search_student/',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response){
+            if(response.success){
+                var tableBody = $('tbody');
+                tableBody.empty();
+
+                var students = JSON.parse(response.students);
+                
+
+                students.forEach(function(student){
+                    console.log(student)
+                        var newRow = '<tr>' +
+                            '<td class="px-4 py-2 border border-gray-200 text-center">' + student.pk + '</td>' +
+                            '<td class="px-4 py-2 border border-gray-200 text-center">' + student.fields.first_name + ' ' + student.fields.last_name + '</td>' +
+                            '<td class="px-4 py-2 border border-gray-200 text-center">' + student.fields.college + '</td>' +
+                            '<td class="px-4 py-2 border border-gray-200 text-center">' + student.fields.course + '</td>' +
+                            '<td class="px-4 py-2 border border-gray-200 text-center">' + student.fields.year + '</td>' +
+                            '<td class="px-4 py-2 border border-gray-200 text-center">' + student.fields.email + '</td>' +
+                            '<td class="px-4 py-2 border border-gray-200 text-center">' + formatDate1(student.fields.enrollment_date) + '</td>' +
+                            `<td class="px-4 py-2 border border-gray-200 text-center">
+                                <button id="view-student-button" type="button" class="text-white px-4 py-2 rounded-md bg-blue-600" value=${student.pk}>View</button>
+                            </td>` +
+                        '</tr>';
+                    
+                    tableBody.append(newRow);
+                });
+            } else {
+                alert('error');
+            }
+        },
+        error: function(xhr, status, error) {
+            alert('Error: ' + error);
+        }
+    })
+})
+
+$("#college-filter, #course-filter, #year-filter").change(function(){
+    var college = v('college-filter');
+    var course = v('course-filter');
+    var year = v('year-filter');
+
+    var formData = new FormData();
+    formData.append('college', college);
+    formData.append('course', course);
+    formData.append('year', year);
+
+    $.ajax({
+        url: /filter_student/,
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response){
+            if (response.success){
+                var tableBody = $('tbody');
+                tableBody.empty();
+
+                var students = JSON.parse(response.students);
+                students.forEach(function(student) {
+                    var newRow = '<tr>' +
+                        '<td class="px-4 py-2 border border-gray-200 text-center">' + student.pk + '</td>' +
+                        '<td class="px-4 py-2 border border-gray-200 text-center">' + student.fields.first_name + ' ' + student.fields.last_name + '</td>' +
+                        '<td class="px-4 py-2 border border-gray-200 text-center">' + student.fields.college + '</td>' +
+                        '<td class="px-4 py-2 border border-gray-200 text-center">' + student.fields.course + '</td>' +
+                        '<td class="px-4 py-2 border border-gray-200 text-center">' + student.fields.year + '</td>' +
+                        '<td class="px-4 py-2 border border-gray-200 text-center">' + student.fields.email + '</td>' +
+                        '<td class="px-4 py-2 border border-gray-200 text-center">' + formatDate1(student.fields.enrollment_date) + '</td>' +
+                        `<td class="px-4 py-2 border border-gray-200 text-center">
+                            <button id="view-student-button" type="button" class="text-white px-4 py-2 rounded-md bg-blue-600" value=${student.pk}>View</button>
+                        </td>` +
+                    '</tr>';
+
+                    tableBody.append(newRow);
+                });
+            } else {
+                alert('No students found');
+            }
+        },
+        error: function(xhr, status, error) {
+            alert('Error: ' + error);
+        }
+    });
+})
+
+function formatDate1(dateString) {
+    var date = new Date(dateString);
+    var options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
+}
